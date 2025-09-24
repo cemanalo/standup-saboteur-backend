@@ -7,6 +7,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return `Stand-up Saboteur api version: ${process.env.APP_VERSION}`;
   }
 }
