@@ -12,3 +12,5 @@ docker-compose*
 .vscode
 test
 *.log
+
+droplet_ip.txt
