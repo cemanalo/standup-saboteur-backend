@@ -18,6 +18,7 @@ export interface PlayerRepository {
   findByIds(ids: string[]): Promise<PlayerEntity[]>;
   findByIdAndGameId(id: string, gameId: string): Promise<PlayerEntity | null>;
   findByNameAndPin(name: string, pin: string): Promise<PlayerEntity | null>;
+  deletePlayerById(id: string): Promise<void>
 }
 
 export class PlayerRepositoryImpl implements PlayerRepository {
@@ -80,5 +81,9 @@ export class PlayerRepositoryImpl implements PlayerRepository {
     pin: string,
   ): Promise<PlayerEntity | null> {
     return this.repo.findOneBy({ name, pin });
+  }
+
+  async deletePlayerById(id: string): Promise<void> {
+    await this.repo.delete({ id })
   }
 }

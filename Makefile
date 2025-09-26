@@ -23,11 +23,14 @@ push: tag
 	docker push $(DOCKER_ACCOUNT)/$(IMAGE_NAME):latest
 
 deploy: bump push
-	ssh $(REMOTE) "docker pull $(DOCKER_ACCOUNT)/$(IMAGE_NAME):latest && \
+	ssh $(REMOTE) "mkdir -p ~/data && \
+		docker pull $(DOCKER_ACCOUNT)/$(IMAGE_NAME):latest && \
 		docker stop $(IMAGE_NAME) || true && \
 		docker rm $(IMAGE_NAME) || true && \
 		docker run -d -p 3000:3000 \
 			-e ALLOWED_ORIGINS=$(ALLOWED_ORIGINS) \
 			-e JWT_SECRET=$(JWT_SECRET) \
 			-e APP_VERSION=$(APP_VERSION) \
+			-v ~/data:/app/data \
 			--name $(IMAGE_NAME) $(DOCKER_ACCOUNT)/$(IMAGE_NAME):latest"
+

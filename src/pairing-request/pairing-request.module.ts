@@ -20,6 +20,8 @@ import { GameModule } from 'src/game/game.module';
 import { PlayerModule } from 'src/player/player.module';
 import { PlayerEntity } from 'src/player/player.entity';
 import { PairingModule } from 'src/pairing/pairing.module';
+import { GameEntity } from 'src/game/game.entity';
+import { GAME_REPOSITORY, GameRepositoryImpl } from 'src/game/game.repository';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { PairingModule } from 'src/pairing/pairing.module';
       PairingRequestEntity,
       PairingEntity,
       PlayerEntity,
+      GameEntity,
     ]),
     GameModule,
     PlayerModule,
@@ -46,6 +49,10 @@ import { PairingModule } from 'src/pairing/pairing.module';
     {
       provide: PLAYER_REPOSITORY,
       useClass: PlayerRepositoryImpl,
+    },
+    {
+      provide: GAME_REPOSITORY,
+      useClass: GameRepositoryImpl
     },
     Logger,
   ],

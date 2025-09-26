@@ -12,6 +12,7 @@ import {
   PLAYER_REPOSITORY,
   type PlayerRepository,
 } from 'src/player/player.repository';
+import { GAME_REPOSITORY, type GameRepository } from 'src/game/game.repository';
 
 export type CreatePairingRequestInput = {
   gameId: string;
@@ -28,6 +29,8 @@ export class CreatePairingRequestUseCase {
     private readonly gameGateway: GameGateway,
     @Inject(PLAYER_REPOSITORY)
     private readonly playerRepo: PlayerRepository,
+    @Inject(GAME_REPOSITORY)
+    private readonly gameRepo: GameRepository,
   ) {}
 
   async execute(input: CreatePairingRequestInput): Promise<void> {
@@ -40,12 +43,16 @@ export class CreatePairingRequestUseCase {
 
     // TODO: check if gameId, fromPlayerId, toPlayerId exist in their respective tables
 
-    // step 2: check if fromPlayerId has reached the limit of 3 pairings today
-    const pairedToday =
-      await this.pairingRepo.getPairingsForPlayerToday(fromPlayerId);
-    if (pairedToday.length >= 3) {
-      throw new Error('Player has reached the limit of 3 pairings today');
-    }
+    // step 2 is only applicable if game mode is 'classic'
+    // const game = await this.gameRepo.findById(gameId);
+    // if (game?.mode === 'classic') {
+      // step 2: check if fromPlayerId has reached the limit of 3 pairings today
+      const pairedToday =
+        await this.pairingRepo.getPairingsForPlayerToday(fromPlayerId);
+      if (pairedToday.length >= 3) {
+        throw new Error('Player has reached the limit of 3 pairings today');
+      }
+    // }
 
     // step 3: check if there are existing pending requests today
     const existingRequests =
@@ -58,14 +65,14 @@ export class CreatePairingRequestUseCase {
       throw new Error('There are existing pending requests');
     }
 
-    // step 3: create the pairing request
+    // step 4: create the pairing request
     const pairingRequest = await this.pairingRequestRepo.createPairingRequest(
       gameId,
       fromPlayerId,
       toPlayerId,
     );
 
-    // step 4: notify receiver of the request via socket
+    // step 5: notify receiver of the request via socket
     const toPlayer = await this.playerRepo.findById(toPlayerId);
 
     if (toPlayer) {

@@ -13,9 +13,17 @@ import { GameGateway } from './game.gateway';
 import { GetGameUseCase } from './use-cases/get.game.use.case';
 import { JoinGameUseCase } from './use-cases/join.game.use.case';
 import { StartGameUseCase } from './use-cases/start.game.use.case';
+import { KickPlayerUseCase } from './use-cases/kick.player.use.case';
+import {
+  FINAL_SCORE_REPOSITORY,
+  FinalScoreRepositoryImpl,
+} from 'src/final-score/final.score.repository';
+import { FinalScoreEntity } from 'src/final-score/final.score.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GameEntity, PlayerEntity])],
+  imports: [
+    TypeOrmModule.forFeature([GameEntity, PlayerEntity, FinalScoreEntity]),
+  ],
   controllers: [GameController],
   providers: [
     {
@@ -26,10 +34,15 @@ import { StartGameUseCase } from './use-cases/start.game.use.case';
       provide: PLAYER_REPOSITORY,
       useClass: PlayerRepositoryImpl,
     },
+    {
+      provide: FINAL_SCORE_REPOSITORY,
+      useClass: FinalScoreRepositoryImpl,
+    },
     CreateGameUseCase,
     GetGameUseCase,
     JoinGameUseCase,
     StartGameUseCase,
+    KickPlayerUseCase,
     Logger,
     GameGateway,
   ],

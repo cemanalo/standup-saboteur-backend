@@ -20,7 +20,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: './data/standup-saboteur.db',
+      database: process.env.DB_DIR || '/app/data/standup-saboteur.db',
       synchronize: true,
       autoLoadEntities: true,
     }),

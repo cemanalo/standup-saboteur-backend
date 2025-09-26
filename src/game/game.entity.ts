@@ -27,6 +27,12 @@ export class GameEntity {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  // @Column({ default: 'classic'})
+  // mode: 'classic' | 'timed';
+
+  // @Column({nullable: true})
+  // endTime: Date
+
   @OneToMany(() => PlayerEntity, (player) => player.game)
   players: PlayerEntity[];
 }

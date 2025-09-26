@@ -13,3 +13,8 @@ export class JoinGameDto {
 export class StartGameDto {
   ownerId: string;
 }
+
+export class KickPlayerDto {
+  ownerId: string
+  targetPlayerId: string
+}

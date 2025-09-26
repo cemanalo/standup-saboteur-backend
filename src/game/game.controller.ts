@@ -1,9 +1,15 @@
 import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { CreateGameUseCase } from './use-cases/create.game.use.case';
-import { CreateGameDto, JoinGameDto, StartGameDto } from './game.dto';
+import {
+  CreateGameDto,
+  JoinGameDto,
+  KickPlayerDto,
+  StartGameDto,
+} from './game.dto';
 import { GetGameUseCase } from './use-cases/get.game.use.case';
 import { JoinGameUseCase } from './use-cases/join.game.use.case';
 import { StartGameUseCase } from './use-cases/start.game.use.case';
+import { KickPlayerUseCase } from './use-cases/kick.player.use.case';
 
 @Controller('games')
 export class GameController {
@@ -13,6 +19,7 @@ export class GameController {
     private readonly getGameUseCase: GetGameUseCase,
     private readonly joinGameUseCase: JoinGameUseCase,
     private readonly startGameUseCase: StartGameUseCase,
+    private readonly kickPlayerUseCase: KickPlayerUseCase,
   ) {}
 
   @Post()
@@ -44,5 +51,16 @@ export class GameController {
     @Body() startGameDto: StartGameDto,
   ) {
     return await this.startGameUseCase.execute({ roomCode, ...startGameDto });
+  }
+
+  @Post(':roomCode/kick')
+  async kick(
+    @Param('roomCode') roomCode: string,
+    @Body() kickPlayerDto: KickPlayerDto,
+  ) {
+    return await this.kickPlayerUseCase.execute({
+      ...kickPlayerDto,
+      roomCode,
+    });
   }
 }

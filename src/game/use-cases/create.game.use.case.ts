@@ -12,6 +12,7 @@ export interface CreateGameInput {
   ownerPin: string;
   ownerSocketId: string;
   avatarSeed: string;
+  // mode?: 'classic' | 'timed';
 }
 
 @Injectable()
@@ -43,6 +44,7 @@ export class CreateGameUseCase {
     Object.assign(gameEntity, {
       ownerId: savedPlayer.id,
       roomCode: this.generateRoomCode(),
+      // mode: input.mode,
     });
 
     const savedGame = await this.gameRepository.save(gameEntity);
